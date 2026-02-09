@@ -34,8 +34,9 @@ def login():
 
 @auth_bp.route('/logout')
 def logout():
-    session.clear()
+    session.clear()    
     return redirect(url_for('auth.login'))
+
 
 @auth_bp.route('/solicitud_recuperacion', methods=['GET', 'POST'])
 def solicitud_recuperacion():
@@ -60,7 +61,8 @@ def solicitud_recuperacion():
         contraseña: admin123
         """
         current_app.extensions['mail'].send(msg)
-        flash('Tu solicitud fue enviada correctamente.', 'success')
+        flash('Tu solicitud fue enviada correctamente', 'success')
         return redirect(url_for('auth.login'))
 
+        
     return render_template('solicitud_recuperacion.html')

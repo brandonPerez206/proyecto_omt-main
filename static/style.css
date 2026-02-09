@@ -7,3 +7,4 @@ body{margin:0;font-family:'Segoe UI',sans-serif;background:#f4f6f8;color:#333;}
 .login-form{background:white;padding:30px;border-radius:8px;display:flex;flex-direction:column;gap:10px;}
 button{background:#14213d;color:white;border:none;padding:10px;cursor:pointer;}
 .flash{background:#ffcc00;padding:8px;border-radius:5px;}
+

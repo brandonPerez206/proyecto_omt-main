@@ -63,16 +63,88 @@
       text-decoration: underline;
   }
 
-    .flash {
-      color: red;
-      margin: 10px 0;
-  }
-  
+    /* CONTENEDOR FLOTANTE */
+    .flash-message {
+  cursor: pointer;
+}
+    .flash-message {
+  padding: 14px 20px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  opacity: 1;
+  transform: translateX(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* Cuando aparece */
+.flash-message.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Cuando se va */
+.flash-message.hide {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.flash-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: auto;
+  max-width: 350px;
+}
+
+/* MENSAJE */
+.flash-message {
+  padding: 14px 20px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  opacity: 1;
+  animation: slideIn 0.5s ease forwards;
+}
+
+/* COLORES */
+.flash-message.success {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border-left: 5px solid #0f5132;
+}
+
+.flash-message.error,
+.flash-message.danger {
+  background-color: #f8d7da;
+  color: #842029;
+  border-left: 5px solid #842029;
+}
+
+.flash-message.warning {
+  background-color: #fff3cd;
+  color: #664d03;
+  border-left: 5px solid #664d03;
+}
+
   </style>
 </head>
-
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 <body>
-
   <form method="POST" class="login-form">
     <h2>Iniciar sesión</h2>
     <input type="text" name="usuario" placeholder="Usuario" required>
@@ -91,6 +163,40 @@
 </footer>
 
   </form>
-  
+  <script>
+  window.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".flash-message").forEach(msg => {
+
+      // 🔊 SONIDO AL APARECER
+      try { alertSound.play(); } catch(e) {}
+
+      // Animación de entrada
+      setTimeout(() => msg.classList.add("show"), 50);
+
+      // Auto-cierre a los 5 segundos
+      const autoClose = setTimeout(() => {
+        closeMessage(msg);
+      }, 5000);
+
+      // Cerrar al hacer click
+      msg.addEventListener("click", () => {
+        clearTimeout(autoClose);
+        closeMessage(msg);
+      });
+
+    });
+
+    function closeMessage(msg) {
+      msg.classList.remove("show");
+      msg.classList.add("hide");
+
+      setTimeout(() => msg.remove(), 800);
+    }
+  });
+</script>
+<script>
+  const alertSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
+  alertSound.volume = 0.25; // volumen bajo (sutil)
+</script>
 </body>
 </html>
