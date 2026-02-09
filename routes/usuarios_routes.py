@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 import sqlite3
 from werkzeug.security import generate_password_hash
+from utils_auditoria import registrar_accion
+
 
 usuarios_bp = Blueprint('usuarios', __name__, url_prefix='/usuarios')
 
@@ -37,13 +39,21 @@ def usuarios():
 
 
 @usuarios_bp.route('/eliminar_usuario/<int:id>', methods=['POST'])
+
 def eliminar_usuario(id):
     if 'usuario' not in session or session['rol'] != 'Administrador':
         return redirect(url_for('dashboard.dashboard'))
-
+    
     conn = sqlite3.connect('bitacoras.db')
+    c.execute("SELECT usuario FROM usuarios WHERE id = ?", (id,))
+    usuario_eliminado = c.fetchone()[0]
     c = conn.cursor()
     c.execute("DELETE FROM usuarios WHERE id = ?", (id,))
+    registrar_accion(
+    accion="Eliminar usuario",
+    detalle=f"Usuario eliminado: {usuario_eliminado}",
+    usuario_admin=session['usuario']
+)
     conn.commit()
     conn.close()
 

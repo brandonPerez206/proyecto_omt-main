@@ -4,14 +4,17 @@ conn = sqlite3.connect('bitacoras.db')
 c = conn.cursor()
 
 c.execute("""
-CREATE TABLE IF NOT EXISTS subcategoria4 (
+CREATE TABLE IF NOT EXISTS auditoria (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tipo TEXT NOT NULL,
-    nombre TEXT NOT NULL
+    accion TEXT NOT NULL,
+    detalle TEXT,
+    usuario_admin TEXT NOT NULL,
+    fecha TEXT NOT NULL,
+    hora TEXT NOT NULL
 )
 """)
 
 conn.commit()
 conn.close()
 
-print("Tabla subcategorias creada correctamente")
+print("Tabla auditoria creada o ya existente")
