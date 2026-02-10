@@ -41,11 +41,5 @@ def test():
 def index():
     return redirect(url_for('dashboard.dashboard'))
 
-if __name__ == '__main__':
-    ensure_templates_and_static()
-    app.run(
-        host='0.0.0.0',
-        port=5000,
-        debug=True,
-        ssl_context=('cert.pem', 'key.pem')
-    )
+app = Flask(__name__)
+
