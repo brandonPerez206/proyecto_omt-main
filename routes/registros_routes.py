@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 import sqlite3
 from datetime import datetime
-from utils_auditoria import registrar_accion
+
 
 registros_bp = Blueprint('registros', __name__, url_prefix='/registros')
 
@@ -68,14 +68,8 @@ def eliminar_registro(id):
         return redirect(url_for('historial.historial'))
 
     conn = sqlite3.connect('bitacoras.db')
-    c.execute("SELECT tipo, descripcion FROM registros WHERE id = ?", (id,))
-    registro = c.fetchone()
     c = conn.cursor()
     c.execute("DELETE FROM registros WHERE id = ?", (id,))
-    registrar_accion(
-    accion="Eliminar registro",
-    detalle=f"Tipo: {registro[0]} | {registro[1][:50]}",
-    usuario_admin=session['usuario'])
     conn.commit()
     conn.close()
 

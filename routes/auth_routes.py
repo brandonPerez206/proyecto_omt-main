@@ -43,7 +43,7 @@ def solicitud_recuperacion():
     if request.method == 'POST':
         nombre = request.form.get('nombre')
         motivo = request.form.get('motivo')
-        destino = "dmcresp@alico-sa.com"
+        destino = "brandonperez1209@gmail.com"
 
         msg = Message(
             subject=" Solicitud de Restablecimiento de Contraseña",

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 import sqlite3
 from werkzeug.security import generate_password_hash
-from utils_auditoria import registrar_accion
+
 
 
 usuarios_bp = Blueprint('usuarios', __name__, url_prefix='/usuarios')
@@ -38,27 +38,41 @@ def usuarios():
     return render_template('usuarios.html', usuarios=usuarios)
 
 
-@usuarios_bp.route('/eliminar_usuario/<int:id>', methods=['POST'])
-
+@usuarios_bp.route('/eliminar/<int:id>', methods=['POST'])
 def eliminar_usuario(id):
     if 'usuario' not in session or session['rol'] != 'Administrador':
         return redirect(url_for('dashboard.dashboard'))
-    
+
     conn = sqlite3.connect('bitacoras.db')
-    c.execute("SELECT usuario FROM usuarios WHERE id = ?", (id,))
-    usuario_eliminado = c.fetchone()[0]
     c = conn.cursor()
+
+    # Obtener usuario antes de eliminar
+    c.execute("SELECT usuario FROM usuarios WHERE id = ?", (id,))
+    user = c.fetchone()
+
+    if user:
+        c.execute("DELETE FROM usuarios WHERE id = ?", (id,))
+        conn.commit()
+
+    # Obtener nombre del usuario antes de eliminar
+    c.execute("SELECT usuario FROM usuarios WHERE id = ?", (id,))
+    fila = c.fetchone()
+
+    if not fila:
+        conn.close()
+        flash("Usuario no encontrado.", "danger")
+        return redirect(url_for('usuarios.usuarios'))
+
+    usuario_eliminado = fila[0]
+
+    # Eliminar usuario
     c.execute("DELETE FROM usuarios WHERE id = ?", (id,))
-    registrar_accion(
-    accion="Eliminar usuario",
-    detalle=f"Usuario eliminado: {usuario_eliminado}",
-    usuario_admin=session['usuario']
-)
     conn.commit()
     conn.close()
 
-    flash("Usuario eliminado correctamente ", "success")
+    flash(f"Usuario '{usuario_eliminado}' eliminado correctamente.", "success")
     return redirect(url_for('usuarios.usuarios'))
+
 
 
 @usuarios_bp.route('/usuarios.cambiar_contrasena/<int:user_id>', methods=['GET', 'POST'])
