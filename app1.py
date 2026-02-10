@@ -22,7 +22,9 @@ app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 
 mail = Mail(app)
+app = Flask(__name__)
 
+ 
 # Registrar blueprints
 def register_routes(app: Flask):
     app.register_blueprint(auth_bp)
@@ -31,7 +33,7 @@ def register_routes(app: Flask):
     app.register_blueprint(usuarios_bp)
     app.register_blueprint(historial_bp)
 
-register_routes(app)  
+
 
 @app.route('/test')
 def test():
@@ -45,7 +47,7 @@ def health():
 from flask import Flask, redirect, url_for
 
 app = Flask(__name__)
-
+register_routes(app) 
 @app.route('/')
 def index():
-    return redirect(url_for('dashboard.dashboard'))
+    return redirect(url_for('auth.login'))

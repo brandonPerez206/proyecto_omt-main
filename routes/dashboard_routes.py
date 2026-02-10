@@ -6,7 +6,7 @@ dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 @dashboard_bp.route('/')
 def dashboard():
     if 'usuario' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('auth.login'))
 
     conn = sqlite3.connect('bitacoras.db')
     c = conn.cursor()
