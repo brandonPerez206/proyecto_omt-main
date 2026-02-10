@@ -37,9 +37,12 @@ register_routes(app)
 def test():
     return "HTTPS funciona"
 
+from flask import redirect, url_for
+
 @app.route('/')
 def index():
     return redirect(url_for('dashboard.dashboard'))
+
 
 app = Flask(__name__)
 
