@@ -13,7 +13,9 @@ def login():
         usuario = request.form['usuario']
         password = request.form['password']
 
-        conn = sqlite3.connect('bitacoras.db')
+        from database import get_connection
+        conn = get_connection()
+
         c = conn.cursor()
         c.execute("SELECT id, usuario, password, rol FROM usuarios WHERE usuario = ?", (usuario,))
         user = c.fetchone()

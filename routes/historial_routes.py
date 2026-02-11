@@ -9,7 +9,9 @@ def historial():
     if 'usuario' not in session:
         return redirect(url_for('auth.login'))
 
-    conn = sqlite3.connect('bitacoras.db')
+    from database import get_connection
+    conn = get_connection()
+
     cursor = conn.cursor()
 
     usuario = request.args.get('usuario')
@@ -35,7 +37,9 @@ def historial():
 
 @historial_bp.route('/exportar')
 def exportar_bitacoras():
-    conn = sqlite3.connect('bitacoras.db')
+    from database import get_connection
+    conn = get_connection()
+
     df = pd.read_sql_query("SELECT * FROM registros ORDER BY id DESC", conn)
     conn.close()
 

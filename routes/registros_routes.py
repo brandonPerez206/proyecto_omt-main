@@ -67,7 +67,9 @@ def eliminar_registro(id):
         flash('No tienes permisos para eliminar registros.', 'danger')
         return redirect(url_for('historial.historial'))
 
-    conn = sqlite3.connect('bitacoras.db')
+    from database import get_connection
+    conn = get_connection()
+
     c = conn.cursor()
     c.execute("DELETE FROM registros WHERE id = ?", (id,))
     conn.commit()

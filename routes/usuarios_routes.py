@@ -11,7 +11,9 @@ def usuarios():
     if 'usuario' not in session or session['rol'] != 'Administrador':
         return redirect(url_for('dashboard.dashboard'))
 
-    conn = sqlite3.connect('bitacoras.db')
+    from database import get_connection
+    conn = get_connection()
+
     c = conn.cursor()
 
     if request.method == 'POST':
@@ -43,7 +45,9 @@ def eliminar_usuario(id):
     if 'usuario' not in session or session['rol'] != 'Administrador':
         return redirect(url_for('dashboard.dashboard'))
 
-    conn = sqlite3.connect('bitacoras.db')
+    from database import get_connection
+    conn = get_connection()
+
     c = conn.cursor()
 
     # Obtener usuario antes de eliminar
@@ -80,7 +84,9 @@ def cambiar_contrasena(user_id):
     if 'usuario' not in session or session['rol'] != 'Administrador':
         return redirect(url_for('dashboard.dashboard'))
 
-    conn = sqlite3.connect('bitacoras.db')
+    from database import get_connection
+    conn = get_connection()
+
     c = conn.cursor()
     c.execute("SELECT id, usuario FROM usuarios WHERE id = ?", (user_id,))
     user = c.fetchone()

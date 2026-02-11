@@ -8,7 +8,9 @@ def dashboard():
     if 'usuario' not in session:
         return redirect(url_for('auth.login'))
 
-    conn = sqlite3.connect('bitacoras.db')
+    from database import get_connection
+    conn = get_connection()
+
     c = conn.cursor()
     c.execute("SELECT id, fecha, hora, usuario, tipo, subcategoria, descripcion FROM registros ORDER BY id DESC LIMIT 10")
     ultimos = c.fetchall()
