@@ -2,12 +2,12 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, redirect, url_for
 from flask_mail import Mail
+
 from routes.auth_routes import auth_bp
 from routes.dashboard_routes import dashboard_bp
 from routes.registros_routes import registros_bp
 from routes.usuarios_routes import usuarios_bp
 from routes.historial_routes import historial_bp
-from routes.setup_templates import ensure_templates_and_static
 
 load_dotenv()
 
@@ -22,33 +22,22 @@ app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 
 mail = Mail(app)
-app = Flask(__name__)
 
- 
 # Registrar blueprints
-def register_routes(app: Flask):
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(dashboard_bp)
-    app.register_blueprint(registros_bp)
-    app.register_blueprint(usuarios_bp)
-    app.register_blueprint(historial_bp)
+app.register_blueprint(auth_bp)
+app.register_blueprint(dashboard_bp)
+app.register_blueprint(registros_bp)
+app.register_blueprint(usuarios_bp)
+app.register_blueprint(historial_bp)
 
-
-
-@app.route('/test')
-def test():
-    return "HTTPS funciona"
+@app.route('/')
+def index():
+    return redirect(url_for('auth.login'))
 
 @app.route('/health')
 def health():
     return "OK"
 
-
-from flask import Flask, redirect, url_for
-
-app = Flask(__name__)
-register_routes(app) 
-@app.route('/')
-def index():
-    return redirect(url_for('auth.login'))
-
+@app.route('/test')
+def test():
+    return "HTTPS funciona"
