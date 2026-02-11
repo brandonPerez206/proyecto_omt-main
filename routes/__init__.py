@@ -14,3 +14,4 @@ def register_routes(app: Flask):
     app.register_blueprint(registros_bp)
     app.register_blueprint(usuarios_bp)
     app.register_blueprint(historial_bp)
+    

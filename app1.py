@@ -12,7 +12,7 @@ from routes.setup_templates import ensure_templates_and_static
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('FLASK_SECRET_KEY')
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret")
 
 # Configuración del correo
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -51,3 +51,4 @@ register_routes(app)
 @app.route('/')
 def index():
     return redirect(url_for('auth.login'))
+
